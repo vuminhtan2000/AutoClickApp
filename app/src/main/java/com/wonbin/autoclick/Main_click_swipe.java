@@ -30,7 +30,11 @@ public class Main_click_swipe extends AppCompatActivity implements View.OnClickL
         if(!checkAccessibilityPermission()){
             Toast.makeText(Main_click_swipe.this, "Mời bạn cấp quyền Accessibility", Toast.LENGTH_SHORT).show();
         }
-
+        if (!Settings.canDrawOverlays(this)) {
+            Intent intent1= new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent1, 0);
+        }
     }
     public boolean checkAccessibilityPermission () {
         int accessEnabled = 0;
@@ -55,21 +59,10 @@ public class Main_click_swipe extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent(this, AutoService.class);
         switch (v.getId()) {
             case R.id.start:
-                if (!Settings.canDrawOverlays(this)) {
-                    Intent intent1= new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                            Uri.parse("package:" + getPackageName()));
-                    startActivityForResult(intent1, 0);
-                }
-
-
                 intent.putExtra(AutoService.ACTION, AutoService.SHOW);
-                // intent.putExtra("interval", Integer.valueOf(mInterval.getText().toString()));
                 int id = mCheckMode.getCheckedRadioButtonId();
                 intent.putExtra(AutoService.MODE, id == R.id.swipe ? AutoService.SWIPE : AutoService.TAP);
                 break;
-//            case R.id.btn_hide:
-////                intent.putExtra(AutoService.ACTION, AutoService.HIDE);
-////                break;
         }
         startService(intent);
         finish();
